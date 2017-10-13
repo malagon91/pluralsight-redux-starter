@@ -3,20 +3,21 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseForm from './CourseForm';
+import toastr from 'toastr';// notifications library
 
 class ManageCoursePage extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
           course: Object.assign({},this.props.course),
-          errors: {}
+          errors: {},
+          saving: false
         };
         this.updateCourseState = this.updateCourseState.bind(this);
         this.saveCourse = this.saveCourse.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
-     // debugger;
       if (this.props.course){
         //Necessary to populate form when existing course is loaded directly.
         this.setState({course: Object.assign({},nextProps.course)});
@@ -32,7 +33,20 @@ class ManageCoursePage extends Component {
 
     saveCourse(event){
       event.preventDefault();
-      this.props.actions.saveCourse(this.state.course);
+      this.setState({saving:true});// for disable button when is saving the course
+      //I've change this function because the app redirect when the value not changes yet.
+      this.props.actions.saveCourse(this.state.course)
+                    .then(()=>{
+                      this.redirect();
+                    }).catch( error =>{
+                      toastr.error(error);
+                      this.setState({saving:false});
+      });
+
+    }
+    redirect(){
+      this.setState({saving:false});
+      toastr.success('Course saved');
       this.context.router.push('/courses');
     }
 
@@ -43,7 +57,8 @@ class ManageCoursePage extends Component {
               onChange={this.updateCourseState}
               onSave={this.saveCourse}
               course={this.state.course}
-              errors={this.state.errors}/>
+              errors={this.state.errors}
+              saving={this.state.saving}/>
         );
     }
 }
@@ -66,7 +81,7 @@ function getCourseById(courses,id){
 }
 
 function mapStateToProps(state, ownProps) {
-  debugger;
+
   const courseId = ownProps.params.id;
   let course  = {id:'',watchHref:'',title:'',authorId:'',length:'',category:''};
   if (courseId) {
