@@ -5,7 +5,7 @@ import * as courseActions from '../../actions/courseActions';
 import CourseForm from './CourseForm';
 import toastr from 'toastr';// notifications library
 
-class ManageCoursePage extends Component {
+export class ManageCoursePage extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -33,6 +33,9 @@ class ManageCoursePage extends Component {
 
     saveCourse(event){
       event.preventDefault();
+      if (!this.courseFormIsValid()){
+        return;
+      }
       this.setState({saving:true});// for disable button when is saving the course
       //I've change this function because the app redirect when the value not changes yet.
       this.props.actions.saveCourse(this.state.course)
@@ -44,6 +47,20 @@ class ManageCoursePage extends Component {
       });
 
     }
+
+  courseFormIsValid(){
+      let formIsValid = true;
+      let errors = {};
+
+      if (this.state.course.title.length < 5){
+        errors.title = 'Title must be at least 5 characters';
+        formIsValid = false;
+      }
+
+      this.setState({errors: errors});
+      return formIsValid;
+  }
+
     redirect(){
       this.setState({saving:false});
       toastr.success('Course saved');
