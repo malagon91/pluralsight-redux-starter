@@ -2,13 +2,15 @@ import  {createStore, applyMiddleware} from 'redux';
 import  rootReducer from '../reducers/index';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import thunk from 'redux-thunk';
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 
 export default  function configureStore(initialState) {
   return createStore(
     rootReducer,
     initialState,
-    applyMiddleware(thunk,reduxImmutableStateInvariant())
+    composeWithDevTools(
+    applyMiddleware(thunk,reduxImmutableStateInvariant()))
   );
   //I've add the thirt paramater that is optional. I think is to ajax calls  applyMiddleware(reduxImmutableStateInvariant())
 }
