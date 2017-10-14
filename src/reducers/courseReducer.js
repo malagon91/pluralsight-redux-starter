@@ -12,7 +12,7 @@ export default function courseReducer(state =  initialState.courses,action){
       //y el metodo filter va a regresar todos menos ese curso entonces solo agregamos el actualizado
       return [
         ...state.filter(course => course.id !== action.course.id),Object.assign({},action.course)
-      ]
+      ];
     default:
       return state;
   }

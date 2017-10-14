@@ -9,11 +9,11 @@ export function loadCoursesSuccess(courses){
 }
 
 export function createCourseSuccess(course){
- return {type:types.CREATE_COURSE_SUCCESS , course}
+ return {type:types.CREATE_COURSE_SUCCESS , course};
 }
 
 export function updateCourseSuccess(course){
-  return {type:types.UPDATE_COURSE_SUCCESS , course}
+  return {type:types.UPDATE_COURSE_SUCCESS , course};
 }
 
 //It loads all the courses from the mock API
